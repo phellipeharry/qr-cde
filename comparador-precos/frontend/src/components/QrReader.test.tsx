@@ -56,7 +56,7 @@ vi.mock('html5-qrcode', () => ({
   })),
 }))
 
-const fetchMock = vi.fn().mockImplementation((url, init) => {
+const fetchMock = vi.fn().mockImplementation((_url, init) => {
   const signal = init?.signal;
   return new Promise((resolve, reject) => {
     if (signal) {
@@ -80,7 +80,7 @@ vi.stubGlobal('fetch', fetchMock)
 beforeEach(() => {
   capturedOnScan = null
   fetchMock.mockClear()
-  fetchMock.mockImplementation((url, init) => {
+  fetchMock.mockImplementation((_url, init) => {
     const signal = init?.signal;
     return new Promise((resolve, reject) => {
       if (signal) {
@@ -144,9 +144,9 @@ describe('QrReader', () => {
   it('exibe erro de timeout se o servidor demorar mais de 60s (client-side)', async () => {
     vi.useFakeTimers()
     
-    fetchMock.mockImplementationOnce((url, init) => {
+    fetchMock.mockImplementationOnce((_url, init) => {
       const signal = init?.signal;
-      return new Promise((resolve, reject) => {
+      return new Promise((_resolve, reject) => {
         if (signal) {
           signal.addEventListener('abort', () => {
             reject(new DOMException('The user aborted a request.', 'AbortError'));
